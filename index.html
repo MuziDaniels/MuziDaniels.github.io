@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vusimozi Solani | Software Engineer & Aspiring SRE</title>
+    <meta name="description" content="Portfolio of Vusimozi Solani, a Software Engineering Learner at Standard Bank and aspiring Site Reliability Engineer.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            950: '#020617',
+                            900: '#0f172a',
+                            850: '#151e32', 
+                            800: '#1e293b',
+                            700: '#334155',
+                        },
+                        teal: {
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            900: '#134e4a',
+                        }
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base Setup */
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            body {
+                cursor: none;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4); /* Lighter for contrast */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(45, 212, 191, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(45, 212, 191, 0.15);
+        }
+
+        /* Animated Grid */
+        .bg-grid {
+            background-size: 50px 50px;
+            mask-image: linear-gradient(to bottom, transparent, black, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 40%, transparent 95%);
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Cursor */
+        #cursor-dot, #cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        #cursor-dot { width: 8px; height: 8px; background-color: #2dd4bf; }
+        #cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(45, 212, 191, 0.5);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Skill Pill Styling */
+        .skill-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            border-radius: 0.5rem;
+            font-size: 0.875rem; /* text-sm */
+            color: #94a3b8; /* slate-400 */
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .skill-pill:hover {
+            border-color: rgba(45, 212, 191, 0.5);
+            color: white;
+            background-color: rgba(45, 212, 191, 0.1);
+        }
+        .skill-pill i {
+            font-size: 1.1rem;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-enter { transform: translateX(100%); }
+        .mobile-menu-active { transform: translateX(0); }
+        
+        #terminal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 10000; font-family: 'Courier New', monospace; padding: 2rem; }
+    </style>
+</head>
+<body class="antialiased selection:bg-teal-500/30 selection:text-teal-200">
+
+    <div id="cursor-dot" class="hidden md:block"></div>
+    <div id="cursor-outline" class="hidden md:block"></div>
+    <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-teal-500 to-emerald-500 z-50 w-0 transition-all duration-100"></div>
+
+    <nav class="fixed w-full z-40 top-0 transition-all duration-300 glass" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-xl font-display font-bold tracking-tight text-white group z-50 relative">
+                Vusimozi<span class="text-teal-400 group-hover:animate-pulse">.SRE</span>
+            </a>
+            
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
+                <a href="#about" class="hover:text-teal-400 transition-colors">About</a>
+                <a href="#skills" class="hover:text-teal-400 transition-colors">Stack</a>
+                <a href="#projects" class="hover:text-teal-400 transition-colors">Projects</a>
+                <a href="#experience" class="hover:text-teal-400 transition-colors">Experience</a>
+            </div>
+
+            <a href="#contact" class="hidden md:inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-navy-900 transition-all duration-200 bg-teal-400 rounded-full hover:bg-teal-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-400 focus:ring-offset-navy-900">
+                Let's Talk
+            </a>
+
+            <button id="mobile-menu-btn" class="md:hidden text-white hover:text-teal-400 z-50 focus:outline-none">
+                <i data-lucide="menu" class="w-8 h-8"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 z-30 bg-navy-900/95 backdrop-blur-xl mobile-menu-enter transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+        <a href="#about" class="text-2xl font-display font-bold text-white hover:text-teal-400 mobile-link">About</a>
+        <a href="#skills" class="text-2xl font-display font-bold text-white hover:text-teal-400 mobile-link">Stack</a>
+        <a href="#projects" class="text-2xl font-display font-bold text-white hover:text-teal-400 mobile-link">Projects</a>
+        <a href="#experience" class="text-2xl font-display font-bold text-white hover:text-teal-400 mobile-link">Experience</a>
+        <a href="#contact" class="px-8 py-3 bg-teal-500 text-navy-900 font-bold rounded-full mobile-link">Let's Talk</a>
+    </div>
+
+    <section class="relative min-h-[100dvh] flex items-center justify-center overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-grid-pattern opacity-[0.15] bg-grid pointer-events-none"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl filter animate-blob mix-blend-screen"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl filter animate-blob animation-delay-2000 mix-blend-screen"></div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-medium mb-8 animate-fade-in-up">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                </span>
+                Open to Opportunities
+            </div>
+
+            <h1 class="text-4xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tracking-tight leading-tight">
+                <span class="text-gradient">Vusimozi Solani</span>
+            </h1>
+
+            <div class="h-8 md:h-12 mb-6">
+                <span id="typewriter" class="text-xl md:text-3xl text-slate-400 font-light font-mono"></span><span class="animate-pulse text-teal-400">|</span>
+            </div>
+
+            <p class="text-slate-400 text-base md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up delay-100">
+                Building resilient, scalable systems. From simple web apps to complex CI/CD pipelines. One pipeline at a time.
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center animate-fade-in-up delay-200 w-full md:w-auto">
+                <a href="#projects" class="w-full md:w-auto px-8 py-3.5 bg-teal-500 hover:bg-teal-400 text-navy-900 font-bold rounded-lg transition-all transform hover:scale-105 shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2">
+                    <i data-lucide="layers"></i> Explore My Work
+                </a>
+                <a href="VUSIMOZI SOLANI CV_.pdf" class="w-full md:w-auto px-8 py-3.5 border border-slate-600 hover:border-teal-500/50 text-slate-300 hover:text-white rounded-lg transition-all flex items-center justify-center gap-2 group bg-navy-800/50">
+                    <i data-lucide="download" class="group-hover:translate-y-1 transition-transform"></i> Download CV
+                </a>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-slate-500 hidden md:block">
+            <i data-lucide="chevron-down"></i>
+        </div>
+    </section>
+
+    <section id="about" class="py-16 md:py-24 relative bg-[#0B1221]">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+                <div class="relative group order-first">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-teal-500 to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative bg-navy-800 rounded-2xl overflow-hidden aspect-[4/5] border border-slate-700">
+                        <img src="me.jpg" alt="Vusimozi Solani" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-display font-bold mb-8 flex items-center gap-4">
+                        <span class="w-12 h-1 bg-teal-500 rounded-full"></span>
+                        About Me
+                    </h2>
+                    <div class="prose prose-invert prose-lg text-slate-300 text-sm md:text-base leading-relaxed">
+                        <p class="mb-6">
+                            I’m a <strong>Software Engineering Learner at Standard Bank</strong> working in the Platform Engineering space. 
+                            My day-to-day involves building and supporting CI/CD pipelines, improving developer experience, and helping keep 
+                            large-scale systems stable across AWS and Azure.
+                        </p>
+                        <p class="mb-6">
+                            My journey started at North-West University where I studied Information Systems from undergrad through Honours, 
+                            and now my MCom in Informatics. Along the way, I built multiple full-stack systems for campus use, volunteered 
+                            extensively, and developed a real interest in automation and reliability engineering.
+                        </p>
+                        <p>
+                            Outside work, I’m usually coding personal projects, learning new tools, experimenting with design, 
+                            or watching movies to reset. I’m driven, curious, and I like solving problems that actually make an impact.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-16 md:py-24 bg-navy-800 relative border-t border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12 md:mb-16">
+                <h2 class="text-3xl md:text-5xl font-display font-bold mb-4">Technical Arsenal</h2>
+                <p class="text-slate-400">The tools and technologies I use to build reliable systems.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-6 text-teal-400">
+                        <i data-lucide="code-2"></i>
+                        <h3 class="font-bold text-white">Programming</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="skill-pill"><i class="devicon-python-plain colored"></i> Python</div>
+                        <div class="skill-pill"><i class="devicon-java-plain colored"></i> Java</div>
+                        <div class="skill-pill"><i class="devicon-php-plain colored"></i> PHP</div>
+                        <div class="skill-pill"><i class="devicon-csharp-plain colored"></i> C#</div>
+                        <div class="skill-pill"><i class="devicon-mysql-plain colored"></i> SQL</div>
+                        <div class="skill-pill"><i class="devicon-html5-plain colored"></i> HTML</div>
+                        <div class="skill-pill"><i class="devicon-css3-plain colored"></i> CSS</div>
+                        <div class="skill-pill"><i class="devicon-javascript-plain colored"></i> JavaScript</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl border-teal-500/20 bg-teal-900/10">
+                    <div class="flex items-center gap-3 mb-6 text-teal-400">
+                        <i data-lucide="cloud"></i>
+                        <h3 class="font-bold text-white">Cloud & DevOps</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="skill-pill"><i data-lucide="rocket" class="w-4 h-4 text-teal-400"></i> Harness</div>
+                        <div class="skill-pill"><i class="devicon-amazonwebservices-plain-wordmark colored"></i> AWS</div>
+                        <div class="skill-pill"><i class="devicon-azure-plain colored"></i> Azure</div>
+                        <div class="skill-pill"><i class="devicon-docker-plain colored"></i> Docker</div>
+                        <div class="skill-pill"><i class="devicon-gitlab-plain colored"></i> GitLab</div>
+                        <div class="skill-pill"><i class="devicon-git-plain colored"></i> Git</div>
+                        <div class="skill-pill"><i class="devicon-splunk-original-wordmark colored"></i> Splunk</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-6 text-teal-400">
+                        <i data-lucide="database"></i>
+                        <h3 class="font-bold text-white">Data & Analytics</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="skill-pill"><i data-lucide="bar-chart-3" class="w-4 h-4"></i> SPSS</div>
+                        <div class="skill-pill"><i data-lucide="sheet" class="w-4 h-4 text-green-500"></i> Excel</div>
+                        <div class="skill-pill"><i data-lucide="file-check" class="w-4 h-4 text-purple-400"></i> Google Forms</div>
+                        <div class="skill-pill"><i data-lucide="pie-chart" class="w-4 h-4 text-yellow-500"></i> Power BI</div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center gap-3 mb-6 text-teal-400">
+                        <i data-lucide="wrench"></i>
+                        <h3 class="font-bold text-white">Tools</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="skill-pill"><i class="devicon-jira-plain colored"></i> Jira</div>
+                        <div class="skill-pill"><i class="devicon-confluence-plain colored"></i> Confluence</div>
+                        <div class="skill-pill"><i data-lucide="globe" class="w-4 h-4"></i> Bruno API</div>
+                        <div class="skill-pill"><i data-lucide="layout-template" class="w-4 h-4"></i> Visio</div>
+                        <div class="skill-pill"><i class="devicon-canva-original colored"></i> Canva</div>
+                        <div class="skill-pill"><i class="devicon-linux-plain text-white"></i> Linux CLI</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-16 md:py-24 relative overflow-hidden bg-navy-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-display font-bold mb-4">Featured Projects</h2>
+                    <p class="text-slate-400 max-w-xl">A selection of systems I've engineered, ranging from enterprise automation to campus solutions.</p>
+                </div>
+                <a href="https://github.com/MuziDaniels" target="_blank" class="text-teal-400 hover:text-white flex items-center gap-2 transition-colors">
+                    View GitHub <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+            <div id="projects-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </div>
+    </section>
+
+    <section id="education" class="py-16 md:py-24 bg-navy-800">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl md:text-5xl font-display font-bold mb-12 text-center">Education & Certifications</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                        <i data-lucide="graduation-cap"></i> Academic
+                    </h3>
+                    
+                    <div class="glass-card p-6 rounded-xl border-l-4 border-teal-500">
+                        <h4 class="font-bold text-white text-lg">Master of Commerce in Informatics</h4>
+                        <p class="text-slate-400 text-sm">North-West University • Feb 2025 – Present</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-xl border-l-4 border-slate-600">
+                        <h4 class="font-bold text-white text-lg">BCom Honours in Information Systems</h4>
+                        <p class="text-slate-400 text-sm">North-West University • 2024</p>
+                        <p class="text-teal-400 text-xs mt-2 font-mono">Average: 74%</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-xl border-l-4 border-slate-600">
+                        <h4 class="font-bold text-white text-lg">BCom in Information Systems</h4>
+                        <p class="text-slate-400 text-sm">North-West University • 2020 – 2023</p>
+                        <p class="text-teal-400 text-xs mt-2 font-mono">Average: 75% • Cum Laude • Dean’s List</p>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-xl border-l-4 border-slate-600">
+                        <h4 class="font-bold text-white text-lg">National Senior Certificate</h4>
+                        <p class="text-slate-400 text-sm">Mosikare Secondary School • 2015 – 2019</p>
+                        <p class="text-teal-400 text-xs mt-2 font-mono">Bachelor's Pass</p>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-teal-400 mb-6 flex items-center gap-2">
+                        <i data-lucide="award"></i> Certifications
+                    </h3>
+                    
+                    <div class="grid gap-4">
+                        <div class="glass-card p-4 rounded-xl flex items-center gap-4 group hover:bg-teal-900/10 transition-colors">
+                            <div class="p-3 bg-blue-900/30 rounded-lg text-blue-400">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">Azure Fundamentals (AZ-900)</h4>
+                                <p class="text-slate-500 text-xs">Microsoft Certified</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl flex items-center gap-4 group hover:bg-teal-900/10 transition-colors">
+                            <div class="p-3 bg-blue-900/30 rounded-lg text-blue-400">
+                                <i data-lucide="check-circle"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">Azure AI Fundamentals (AI-900)</h4>
+                                <p class="text-slate-500 text-xs">Microsoft Certified</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-4 rounded-xl flex items-center gap-4 group hover:bg-teal-900/10 transition-colors">
+                            <div class="p-3 bg-purple-900/30 rounded-lg text-purple-400">
+                                <i data-lucide="brain"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">Problem Solving with Critical Thinking</h4>
+                                <p class="text-slate-500 text-xs">IBM (2023)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="py-16 md:py-24 bg-[#0B1221]">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl md:text-5xl font-display font-bold mb-16 text-center">Journey</h2>
+            <div class="relative border-l border-slate-700 ml-3 md:ml-6 space-y-12">
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[9px] top-0 w-5 h-5 rounded-full bg-teal-500 border-4 border-navy-900 shadow-lg shadow-teal-500/50"></div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                        <h3 class="text-xl font-bold text-white">Software Engineering Learner</h3>
+                        <span class="text-sm text-teal-400 font-mono">April 2025 - Present</span>
+                    </div>
+                    <div class="mb-4 text-slate-400 font-medium">Standard Bank (Platform Engineering Team) • Johannesburg</div>
+                    <ul class="list-disc list-outside ml-4 text-slate-400 space-y-2 text-sm leading-relaxed">
+                        <li>Part of the <strong>Personal and Private Banking</strong> Platform Engineering team.</li>
+                        <li>Building and maintaining CI/CD pipelines using <strong>Harness</strong> to support internal engineering teams.</li>
+                        <li>Improving developer experience and platform reliability through automation using AWS, Azure, and Git.</li>
+                    </ul>
+                </div>
+
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[9px] top-0 w-5 h-5 rounded-full bg-slate-600 border-4 border-navy-900"></div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                        <h3 class="text-xl font-bold text-white">Student Assistant</h3>
+                        <span class="text-sm text-slate-500 font-mono">Apr 2024 – Nov 2024</span>
+                    </div>
+                    <div class="mb-4 text-slate-400 font-medium">North-West University • Mahikeng</div>
+                    <ul class="list-disc list-outside ml-4 text-slate-400 space-y-2 text-sm leading-relaxed">
+                        <li>Assisted lecturers with invigilation and monitoring of assessments.</li>
+                        <li>Facilitated tutorials and provided academic support to students.</li>
+                        <li>Offered technical support for faculty events and activities.</li>
+                    </ul>
+                </div>
+
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[9px] top-0 w-5 h-5 rounded-full bg-slate-600 border-4 border-navy-900"></div>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                        <h3 class="text-xl font-bold text-white">Marking Assistant</h3>
+                        <span class="text-sm text-slate-500 font-mono">Dec 2023</span>
+                    </div>
+                    <div class="mb-4 text-slate-400 font-medium">Department of Basic Education • Zeerust</div>
+                    <ul class="list-disc list-outside ml-4 text-slate-400 space-y-2 text-sm leading-relaxed">
+                        <li>Distributed exam scripts and ensured accurate tracking.</li>
+                        <li>Checked script completeness and corrected discrepancies.</li>
+                        <li>Digitised and archived exam materials.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-16 md:py-24 bg-gradient-to-b from-navy-900 to-black">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-display font-bold mb-6">Ready to Scale?</h2>
+            <p class="text-slate-400 mb-10 text-lg">
+                Whether you have a question about my pipelines, want to discuss SRE best practices, or just want to say hi.
+            </p>
+            
+            <div class="glass-card p-6 md:p-8 rounded-2xl text-left max-w-xl mx-auto">
+                <form onsubmit="event.preventDefault(); alert('This is a demo. Email me directly!');" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Name</label>
+                        <input type="text" class="w-full bg-navy-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-colors" placeholder="Your name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Email</label>
+                        <input type="email" class="w-full bg-navy-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-colors" placeholder="Your email">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-2">Message</label>
+                        <textarea rows="4" class="w-full bg-navy-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-teal-500 transition-colors" placeholder="Your message"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-4 bg-teal-500 hover:bg-teal-400 text-navy-900 font-bold rounded-lg transition-all shadow-lg shadow-teal-500/20">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+
+            <div class="mt-12 flex justify-center gap-6">
+                <a href="https://github.com/MuziDaniels" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="github"></i></a>
+                <a href="https://www.linkedin.com/in/vusimozi-solani-6905b7207" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="linkedin"></i></a>
+                <a href="https://www.instagram.com/muzidaniels/" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="instagram"></i></a>
+                <a href="mailto:lazer7545@gmail.com" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="mail"></i></a>
+            </div>
+            
+            <p class="mt-8 text-slate-600 text-sm">
+                © 2025 Vusimozi Solani.
+            </p>
+        </div>
+    </section>
+
+    <dialog id="project-modal" class="bg-transparent p-0 w-full h-full max-w-none max-h-none backdrop:bg-black/90 z-50 fixed inset-0">
+        <div class="w-full h-full flex items-center justify-center p-4" onclick="closeModal(event)">
+            <div class="glass-card max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-2xl relative" onclick="event.stopPropagation()">
+                <button onclick="document.getElementById('project-modal').close()" class="absolute top-4 right-4 p-2 bg-black/20 rounded-full hover:bg-white/10 transition-colors text-white z-10">
+                    <i data-lucide="x"></i>
+                </button>
+                <div id="modal-content" class="p-0"></div>
+            </div>
+        </div>
+    </dialog>
+
+    <div id="terminal-overlay">
+        <div class="text-green-500">
+            <p>> SYSTEM ACCESS GRANTED</p>
+            <p>> USER: VUSIMOZI</p>
+            <p>> UPTIME: 99.999%</p>
+            <p>> STATUS: HIRED</p>
+            <br>
+            <p class="animate-pulse">> _</p>
+        </div>
+        <button onclick="document.getElementById('terminal-overlay').style.display = 'none'" class="absolute top-4 right-4 text-green-700 hover:text-green-500">[EXIT]</button>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        // --- 1. Initialize Icons ---
+        lucide.createIcons();
+
+        // --- 2. Mobile Menu Logic ---
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        mobileBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('mobile-menu-enter');
+                mobileMenu.classList.add('mobile-menu-active');
+            } else {
+                mobileMenu.classList.add('mobile-menu-enter');
+                mobileMenu.classList.remove('mobile-menu-active');
+            }
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.add('mobile-menu-enter');
+                mobileMenu.classList.remove('mobile-menu-active');
+            });
+        });
+
+        // --- 3. Project Data ---
+        const projects = [
+            {
+                id: 1,
+                title: "Standard Bank Platform Automation",
+                tag: "Work @ Standard Bank",
+                desc: "Building CI/CD pipelines with Harness for the Platform Engineering team.",
+                longDesc: "Working within the Personal & Private Banking team to build, configure, and maintain CI/CD pipelines. Utilizing AWS, Azure, and Git to improve developer efficiency and system reliability.",
+                stack: ["Harness", "AWS", "Azure", "Git"],
+                image: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                link: "#"
+            },
+            {
+                id: 2,
+                title: "Online Player Registration System",
+                tag: "Full Stack (2024)",
+                desc: "Web-based team management system with complex data constraints.",
+                longDesc: "Designed a registration system ensuring data integrity with MySQL constraints. Developed tools for CRUD operations and team management.",
+                stack: ["PHP", "MySQL", "JavaScript", "HTML/CSS"],
+                image: "linear-gradient(135deg, #0f172a 0%, #0d9488 100%)",
+                link: "#"
+            },
+            {
+                id: 3,
+                title: "Visitors Management System",
+                tag: "Full Stack (2023)",
+                desc: "QR code access control and real-time tracking.",
+                longDesc: "Built a visitor registration system supporting online pre-registration, secure QR code email invitations, and real-time tracking integrated with campus access controls.",
+                stack: ["PHP", "MySQL", "JavaScript", "QR Integration"],
+                image: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+                link: "#"
+            },
+            {
+                id: 4,
+                title: "Int. Student Registration",
+                tag: "Web App (2022)",
+                desc: "Automated workflows for international student data management.",
+                longDesc: "Developed a platform for NWU Mafikeng Campus to handle authentication, student data management, and automated registration workflows.",
+                stack: ["PHP", "MySQL", "HTML", "CSS"],
+                image: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                link: "#"
+            },
+            {
+                id: 5,
+                title: "Research: IPR & Software Piracy",
+                tag: "Research (2024)",
+                desc: "Quantitative study analysing student awareness of software laws.",
+                longDesc: "Conducted a quantitative study exploring awareness levels among university students regarding IPR and software piracy. Collected and analysed data using SPSS and Excel.",
+                stack: ["SPSS", "Excel", "Data Analysis"],
+                image: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+                link: "#"
+            },
+             {
+                id: 6,
+                title: "SRE Portfolio (This Site)",
+                tag: "Meta",
+                desc: "100% Lighthouse score, deployed on Vercel.",
+                longDesc: "You're looking at it. Built with semantic HTML, Tailwind CSS, and optimized for performance and accessibility. Achieving perfect Lighthouse scores.",
+                stack: ["HTML5", "Tailwind", "GSAP", "Vercel"],
+                image: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+                link: "#"
+            }
+        ];
+
+        // --- 4. Render Projects ---
+        const projectGrid = document.getElementById('projects-grid');
+        
+        projects.forEach(project => {
+            const card = document.createElement('div');
+            card.className = 'glass-card rounded-2xl overflow-hidden cursor-pointer group relative';
+            card.onclick = () => openModal(project);
+            
+            card.innerHTML = `
+                <div class="h-48 w-full bg-slate-800 relative overflow-hidden group-hover:opacity-90 transition-opacity" style="background: ${project.image}">
+                    <div class="absolute inset-0 flex items-center justify-center text-slate-600 group-hover:scale-105 transition-transform duration-500">
+                        <i data-lucide="monitor" class="w-12 h-12 text-white/20"></i>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-teal-400 border border-teal-500/20">
+                        ${project.tag}
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-teal-400 transition-colors">${project.title}</h3>
+                    <p class="text-slate-400 text-sm mb-4 line-clamp-2">${project.desc}</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${project.stack.map(tech => `<span class="px-2 py-1 bg-slate-700/50 rounded text-xs text-slate-300 border border-slate-600">${tech}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            projectGrid.appendChild(card);
+        });
+
+        // --- 5. Modal Logic ---
+        function openModal(project) {
+            const modal = document.getElementById('project-modal');
+            const content = document.getElementById('modal-content');
+            
+            content.innerHTML = `
+                <div class="h-64 w-full relative" style="background: ${project.image}">
+                    <div class="absolute bottom-0 left-0 w-full p-6 md:p-8 bg-gradient-to-t from-navy-900 to-transparent">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">${project.title}</h2>
+                        <span class="text-teal-400 font-mono text-sm">${project.tag}</span>
+                    </div>
+                </div>
+                <div class="p-6 md:p-8">
+                    <p class="text-slate-300 leading-relaxed text-base md:text-lg mb-6">${project.longDesc}</p>
+                    <div class="mb-8">
+                        <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Tech Stack</h4>
+                        <div class="flex flex-wrap gap-2">
+                            ${project.stack.map(tech => `<span class="px-3 py-1 bg-teal-500/10 border border-teal-500/30 rounded-full text-sm text-teal-400">${tech}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="${project.link}" class="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-navy-900 font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
+                            View Live <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="px-6 py-3 border border-slate-600 hover:bg-white/5 text-white rounded-lg transition-colors flex items-center justify-center gap-2">
+                            GitHub <i data-lucide="github" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            modal.showModal();
+        }
+
+        function closeModal(event) {
+            if (event.target.id === 'project-modal') {
+                document.getElementById('project-modal').close();
+            }
+        }
+
+        // --- 6. Typewriter Effect ---
+        const words = ["Software Engineer.", "Aspiring SRE.", "Automation Geek.", "Site Reliability Engineer.",  "Platform Engineer.", "AWS and DevOps.", "MCom Informatics"];
+        let i = 0;
+        function typeWriter() {
+            const element = document.getElementById('typewriter');
+            const word = words[i % words.length];
+            element.innerText = word;
+            i++;
+            setTimeout(typeWriter, 2500); 
+        }
+        typeWriter();
+
+        // --- 7. Custom Cursor (Desktop Only) ---
+        if (window.matchMedia("(min-width: 768px)").matches) {
+            const cursorDot = document.getElementById("cursor-dot");
+            const cursorOutline = document.getElementById("cursor-outline");
+
+            window.addEventListener("mousemove", function (e) {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+                cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
+            });
+
+            document.querySelectorAll('a, button, .cursor-pointer').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorOutline.style.width = '60px'; cursorOutline.style.height = '60px'; cursorOutline.style.backgroundColor = 'rgba(45, 212, 191, 0.1)';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorOutline.style.width = '40px'; cursorOutline.style.height = '40px'; cursorOutline.style.backgroundColor = 'transparent';
+                });
+            });
+        }
+
+        // --- 8. Reading Progress & Blur ---
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+            
+            const nav = document.getElementById('navbar');
+            if (winScroll > 50) {
+                nav.classList.add('shadow-lg'); nav.style.paddingTop = '1rem'; nav.style.paddingBottom = '1rem';
+            } else {
+                nav.classList.remove('shadow-lg'); nav.style.paddingTop = '1.5rem'; nav.style.paddingBottom = '1.5rem';
+            }
+        };
+
+        // --- 9. GSAP ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.utils.toArray("section h2").forEach(heading => {
+            gsap.from(heading, {
+                scrollTrigger: { trigger: heading, start: "top 85%" },
+                y: 50, opacity: 0, duration: 1, ease: "power3.out"
+            });
+        });
+
+        gsap.utils.toArray(".glass-card").forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: { trigger: card, start: "top 95%" },
+                y: 50, opacity: 0, duration: 0.8, delay: 0.1, ease: "power3.out"
+            });
+        });
+
+        // --- 10. Konami Code ---
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    document.getElementById('terminal-overlay').style.display = 'block';
+                    konamiIndex = 0;
+                }
+            } else { konamiIndex = 0; }
+        });
+    </script>
+</body>
+</html>
