@@ -255,27 +255,28 @@
             justify-content: center;
             width: 40px;
             height: 40px;
-            background: transparent;
-            border: 1px solid var(--text-primary);
+            background: var(--accent);
+            border: none;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-right: 16px;
+            mix-blend-mode: normal;
+            isolation: isolate;
         }
 
         .theme-toggle:hover {
-            background: var(--accent);
-            border-color: var(--accent);
+            background: #FFFFFF;
         }
 
         .theme-toggle svg {
             width: 18px;
             height: 18px;
-            fill: var(--text-primary);
+            fill: #FFFFFF;
             transition: fill 0.3s ease;
         }
 
         .theme-toggle:hover svg {
-            fill: var(--text-primary);
+            fill: var(--accent);
         }
 
         .theme-toggle .sun-icon {
