@@ -15,13 +15,9 @@ const ALLOWED_ORIGINS = [
 // NVIDIA's OpenAI-compatible endpoint.
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
-// Mistral Small 24B — confirmed working with your API key.
-// Good balance of intelligence (doesn't hallucinate like 8B models)
-// and speed (fits within Vercel's 10s function limit).
-// If this model ever stops working, alternatives to try:
-//   "meta/llama-3.1-8b-instruct" (faster but dumber)
-//   "meta/llama-3.1-70b-instruct" (smarter but may timeout)
-const MODEL = "mistralai/mistral-small-24b-instruct-2501";
+// TEMPORARILY using Llama 3.1 8B to debug — this model was confirmed working.
+// Once the upstream error is resolved, switch back to a smarter model.
+const MODEL = "meta/llama-3.1-8b-instruct";
 
 // Hard caps — this is your main cost/abuse control. Keep these conservative.
 // Also directly affects speed: fewer tokens and less history = faster replies,
@@ -158,7 +154,11 @@ export default async function handler(req, res) {
     if (!nvidiaRes.ok) {
       const errText = await nvidiaRes.text();
       console.error("NVIDIA API error:", nvidiaRes.status, errText);
-      return res.status(502).json({ error: "Upstream model error" });
+      // Expose the actual error for debugging — remove this detail once resolved
+      return res.status(502).json({ 
+        error: `NVIDIA ${nvidiaRes.status}`, 
+        message: `Model: ${MODEL} | Status: ${nvidiaRes.status} | ${errText.slice(0, 200)}` 
+      });
     }
 
     const data = await nvidiaRes.json();
