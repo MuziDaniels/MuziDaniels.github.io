@@ -6,7 +6,11 @@
 
 // Only this origin is allowed to call the API. Update if your GitHub Pages
 // domain or a custom domain changes.
-const ALLOWED_ORIGIN = "https://muzidaniels.github.io";
+const ALLOWED_ORIGINS = [
+  "https://muzidaniels.github.io",
+  "https://muzidaniels.me",
+  "https://www.muzidaniels.me"
+];
 
 // NVIDIA's OpenAI-compatible endpoint.
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
@@ -66,7 +70,12 @@ RULES:
 
 export default async function handler(req, res) {
   // CORS
-  res.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  } else {
+    res.setHeader("Access-Control-Allow-Origin", ALLOWED_ORIGINS[0]);
+  }
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
