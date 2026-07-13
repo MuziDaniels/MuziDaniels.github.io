@@ -15,13 +15,13 @@ const ALLOWED_ORIGINS = [
 // NVIDIA's OpenAI-compatible endpoint.
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
-// Model choice matters a lot here — I can't test live latency against NVIDIA's
-// API from where I'm working, so I can't independently confirm which of your
-// confirmed-working models (deepseek-ai/deepseek-v4-flash or moonshotai/kimi-k2.6)
-// responds faster. Keeping deepseek-v4-flash since you've confirmed it works and
-// "flash" suggests it's the speed-optimized one — but if it's still slow after
-// this fix, try swapping to moonshotai/kimi-k2.6 and compare.
-const MODEL = "deepseek-ai/deepseek-v4-flash";
+// Mistral Small 24B — confirmed working with your API key.
+// Good balance of intelligence (doesn't hallucinate like 8B models)
+// and speed (fits within Vercel's 10s function limit).
+// If this model ever stops working, alternatives to try:
+//   "meta/llama-3.1-8b-instruct" (faster but dumber)
+//   "meta/llama-3.1-70b-instruct" (smarter but may timeout)
+const MODEL = "mistralai/mistral-small-24b-instruct-2501";
 
 // Hard caps — this is your main cost/abuse control. Keep these conservative.
 // Also directly affects speed: fewer tokens and less history = faster replies,
