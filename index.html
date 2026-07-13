@@ -2101,7 +2101,7 @@
         function getPreferredTheme() {
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) return savedTheme;
-            return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            return 'light';
         }
 
         function setTheme(theme) {
@@ -2121,11 +2121,7 @@
             setTheme(newTheme);
         });
 
-        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-            if (!localStorage.getItem('theme')) {
-                setTheme(e.matches ? 'light' : 'dark');
-            }
-        });
+
 
         // ---- AI Assistant Widget ----------------------------------------
         // IMPORTANT: replace with your deployed backend URL after following
