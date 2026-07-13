@@ -1,0 +1,9 @@
+{
+  "name": "muzi-ai-assistant-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Serverless proxy for Vusimozi Solani's portfolio AI assistant. Keeps the NVIDIA NIM API key server-side.",
+  "engines": {
+    "node": ">=18"
+  }
+}
