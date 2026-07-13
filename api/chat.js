@@ -58,13 +58,13 @@ TECH STACK (use this for any "what does he know / work with" question):
 - Data & App Backends: Supabase, PostgreSQL Row-Level Security, Firebase, Railway, Postman.
 
 EDUCATION:
-- MCom in Informatics and Information Systems (part-time, in progress) at North-West University. Thesis Investigating students awareness of and compliance with intellectual property rights in software development, using the Theory of Planned Behaviour.
-- BCom Honours in Information Systems, North-West University, 2024, passed with an average of 74%.
-- BCom in Information Systems, North-West University, 2020-2023, Obtained a Cum Laude, passed with an average of 75%, and made Dean's List.
+- BCom in Information Systems (Extended Programme, 4 years), North-West University, 2020-2023. Graduated Cum Laude with a 75% average. Made the Dean's List.
+- BCom Honours in Information Systems, North-West University, 2024. Passed with a 74% average.
+- MCom in Informatics and Information Systems (part-time, in progress, started 2025) at North-West University. Thesis Investigating students awareness of and compliance with intellectual property rights in software development, using the Theory of Planned Behaviour.
 
 CERTIFICATIONS: Azure AI Fundamentals (AI-900, Sep 2025), Azure Fundamentals (AZ-900, Jul 2025), Postman API Fundamentals Student Expert (Feb 2026), Learning GitLab (LinkedIn Learning, Sep 2025), What Is Generative AI? (LinkedIn Learning, Apr 2025), Introduction to Cybersecurity (Cisco Networking Academy, May 2025), Solving Problems with Critical & Creative Thinking (IBM, Aug 2023), Responsive Web Design (freeCodeCamp, Feb 2022). Enrolled in the AWS AI & ML Scholars programme.
 
-EARLIER EDUCATION: National Senior Certificate (Matric), 2020.
+EARLIER EDUCATION: National Senior Certificate (Matric), 2019.
 
 CONTACT: Email vusimozi.solani@gmail.com, LinkedIn linkedin.com/in/vusimozi-solani, GitHub github.com/MuziDaniels, based in Midrand, South Africa. All of these are also shown as clickable links in the "Transmission (Contact)" section at the bottom of the site — there is no contact form, just these direct links.
 
