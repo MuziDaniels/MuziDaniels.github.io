@@ -15,14 +15,15 @@ const ALLOWED_ORIGINS = [
 // NVIDIA's OpenAI-compatible endpoint.
 const NVIDIA_API_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 
-// Confirmed working per your existing LiteLLM setup. "flash" variants are
-// tuned for low latency, which matters for a chat widget UX.
-const MODEL = "deepseek-ai/deepseek-v4-flash";
+// Using Llama 3.1 8B Instruct for low latency on Vercel's 10s function limit.
+// DeepSeek V4 Flash is smarter but too slow for a chat widget on the free tier.
+const MODEL = "meta/llama-3.1-8b-instruct";
 
 // Hard caps — this is your main cost/abuse control. Keep these conservative.
-const MAX_TOKENS = 350;
-const MAX_HISTORY_MESSAGES = 10; // trims long conversations before they're sent
-const MAX_MESSAGE_CHARS = 800;   // rejects absurdly long single messages
+const MAX_TOKENS = 250;
+const MAX_HISTORY_MESSAGES = 6;  // smaller history = faster inference
+const MAX_MESSAGE_CHARS = 500;   // rejects absurdly long single messages
+const NVIDIA_TIMEOUT_MS = 8000;  // abort before Vercel's 10s hard limit
 
 // ---- KNOWLEDGE BASE ---------------------------------------------------------
 // Everything the assistant is allowed to know about Vusimozi. Keep this accurate —
@@ -112,8 +113,13 @@ export default async function handler(req, res) {
     model: MODEL,
     messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
     max_tokens: MAX_TOKENS,
-    temperature: 0.6,
+    temperature: 0.4,
   };
+
+  // Abort before Vercel's 10s hard limit to return a clean error instead
+  // of a raw 504 gateway timeout.
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), NVIDIA_TIMEOUT_MS);
 
   try {
     const nvidiaRes = await fetch(NVIDIA_API_URL, {
@@ -123,7 +129,10 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify(payload),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeout);
 
     if (!nvidiaRes.ok) {
       const errText = await nvidiaRes.text();
@@ -136,6 +145,11 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ reply });
   } catch (err) {
+    clearTimeout(timeout);
+    if (err.name === "AbortError") {
+      console.error("NVIDIA API timed out after", NVIDIA_TIMEOUT_MS, "ms");
+      return res.status(504).json({ error: "The model took too long — try a shorter question" });
+    }
     console.error("Chat handler error:", err);
     return res.status(500).json({ error: "Something went wrong" });
   }

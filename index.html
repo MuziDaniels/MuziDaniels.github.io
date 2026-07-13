@@ -1880,7 +1880,7 @@
             <button class="ai-close" id="ai-close">[CLOSE]</button>
         </div>
         <div class="ai-messages" id="ai-messages">
-            <div class="ai-msg bot">Hey — I'm an AI assistant trained on Muzi's background and projects. Ask me anything
+            <div class="ai-msg bot">Hey — I'm an AI assistant trained on Vusimozi's background and projects. Ask me anything
                 about his work, stack, or experience.</div>
         </div>
         <div class="ai-input-row">
@@ -2185,13 +2185,22 @@
             typingEl.classList.add('typing');
 
             try {
+                const controller = new AbortController();
+                const fetchTimeout = setTimeout(() => controller.abort(), 12000);
+
                 const res = await fetch(CHAT_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: conversation })
+                    body: JSON.stringify({ messages: conversation }),
+                    signal: controller.signal
                 });
 
-                if (!res.ok) throw new Error('Request failed');
+                clearTimeout(fetchTimeout);
+
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || 'Request failed');
+                }
 
                 const data = await res.json();
                 typingEl.remove();
@@ -2199,7 +2208,11 @@
                 conversation.push({ role: 'assistant', content: data.reply || '' });
             } catch (err) {
                 typingEl.remove();
-                addMessage("Couldn't reach the assistant right now — try again in a moment.", 'bot');
+                if (err.name === 'AbortError') {
+                    addMessage("That question took too long — try rephrasing it shorter.", 'bot');
+                } else {
+                    addMessage(err.message || "Couldn't reach the assistant right now — try again in a moment.", 'bot');
+                }
             } finally {
                 awaitingReply = false;
                 aiSend.disabled = false;
